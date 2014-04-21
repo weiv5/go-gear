@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [ ! -f install ]; then
+echo ' go install nothing to done! ' 1>&2
+exit 1
+fi
+
+CURDIR=`pwd`
+OLDGOPATH="$GOPATH"
+export GOPATH="$CURDIR"
+
+function goInstall {
+    go tool vet src/$1
+    go install $1
+    if [ $? -eq 0 ]; then
+    echo " ------ go install $1 ok ------ "
+    fi
+}
+
+goInstall web
+
+export GOPATH="$OLDGOPATH"
+
