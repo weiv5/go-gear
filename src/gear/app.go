@@ -5,6 +5,8 @@ import (
     "strconv"
     "strings"
     "fmt"
+    "html/template"
+    "encoding/json"
 )
 
 type AppInterface interface {
@@ -14,11 +16,32 @@ type AppInterface interface {
 type App struct {
     r *http.Request
     w http.ResponseWriter
+    data map[string] interface{}
 }
 
 func (app *App) Init(w http.ResponseWriter, r *http.Request) {
     app.w = w
     app.r = r
+    app.data = make(map[string] interface{})
+}
+
+func (app *App) Assign(key string, val interface{}) {
+    app.data[key] = val
+}
+
+func (app *App) Display(name string, tpl ...string) error {
+    t,_ := template.ParseFiles(tpl...)
+    t.ExecuteTemplate(app.w, name, app.data)
+    t.Execute(app.w, nil)
+    return nil
+}
+
+func (app *App) Json(data interface{}) error {
+    content,_ := json.Marshal(data)
+    app.w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+    app.w.Header().Set("Content-Length", strconv.Itoa(len(content)))
+    app.w.Write(content)
+    return nil
 }
 
 func (app *App) GetInt(name string) (int, error) {

@@ -2,19 +2,31 @@ package app
 
 import (
     "gear"
-    "fmt"
 )
 
 type TestApp struct {
     gear.App
 }
 
+var (
+    tplPath = "src/web/view/"
+)
+
 func (app *TestApp) IndexAction() {
-    fmt.Println("testApp Index By wei")
-    fmt.Println(app.Get("what"))
+    app.Assign("ip", app.Ip2Long())
+    app.Display("content", tplPath+"header.html", tplPath+"footer.html", tplPath+"content.html")
+}
+
+
+
+
+
+type Ret struct {
+    Status   bool   `json:"status"`
+    Data     string `json:"data"`
 }
 
 func (app *TestApp) GoAction() {
-    fmt.Println("testApp Go By wei")
-    fmt.Println(app.Get("what"))
+    ret := &Ret{false, app.Ip()}
+    app.Json(ret)
 }

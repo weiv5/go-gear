@@ -4,7 +4,6 @@ import (
     "reflect"
     "strings"
     "net/http"
-    "fmt"
 )
 
 var (
@@ -50,7 +49,6 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         init.Call(wr)
 
         method := app.MethodByName(strings.Title(action)+"Action")
-        fmt.Println(method)
         method.Call(nil)
         return
     }
