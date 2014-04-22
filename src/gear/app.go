@@ -14,33 +14,33 @@ type AppInterface interface {
 }
 
 type App struct {
-    r *http.Request
-    w http.ResponseWriter
-    data map[string] interface{}
+    Module string
+    Action string
+    R *http.Request
+    W http.ResponseWriter
+    Data map[string] interface{}
 }
 
-func (app *App) Init(w http.ResponseWriter, r *http.Request) {
-    app.w = w
-    app.r = r
-    app.data = make(map[string] interface{})
-}
-
-func (app *App) Assign(key string, val interface{}) {
-    app.data[key] = val
+func (app *App) Init(w http.ResponseWriter, r *http.Request, module string, action string) {
+    app.W = w
+    app.R = r
+    app.Data = make(map[string] interface{})
+    app.Module = module
+    app.Action = action
 }
 
 func (app *App) Display(name string, tpl ...string) error {
     t,_ := template.ParseFiles(tpl...)
-    t.ExecuteTemplate(app.w, name, app.data)
-    t.Execute(app.w, nil)
+    t.ExecuteTemplate(app.W, name, app.Data)
+    t.Execute(app.W, nil)
     return nil
 }
 
 func (app *App) Json(data interface{}) error {
     content,_ := json.Marshal(data)
-    app.w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-    app.w.Header().Set("Content-Length", strconv.Itoa(len(content)))
-    app.w.Write(content)
+    app.W.Header().Set("Content-Type", "application/json;charset=UTF-8")
+    app.W.Header().Set("Content-Length", strconv.Itoa(len(content)))
+    app.W.Write(content)
     return nil
 }
 
@@ -57,7 +57,7 @@ func (app *App) GetFloat(name string) (float64, error) {
 }
 
 func (app *App) Get(name string) string {
-    return app.r.FormValue(name)
+    return app.R.FormValue(name)
 }
 
 func (app *App) PostInt(name string) (int, error) {
@@ -73,18 +73,18 @@ func (app *App) PostFloat(name string) (float64, error) {
 }
 
 func (app *App) Post(name string) string {
-    return app.r.PostFormValue(name)
+    return app.R.PostFormValue(name)
 }
 
 func (app *App) Ip() string {
-    ips := app.r.Header.Get("X-Forwarded-For")
+    ips := app.R.Header.Get("X-Forwarded-For")
     if ips != "" {
         ip := strings.Split(ips, ",")
         if len(ip) > 0 && ip[0] != "" {
              return ip[0]
         }
     }
-    ips2 := strings.Split(app.r.RemoteAddr, ":")
+    ips2 := strings.Split(app.R.RemoteAddr, ":")
     if len(ips2) > 0 {
         if ips2[0] != "[" {
             return ips2[0]

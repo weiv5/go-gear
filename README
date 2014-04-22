@@ -1,0 +1,3 @@
+install :   ./install
+start   :   ./bin/web -conf=etc/conf.ini
+request :   localhost:8080/test   localhost:8080/test/go

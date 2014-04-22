@@ -44,7 +44,7 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if appType, ok := RouterMaps[m][action]; ok {
         app := reflect.New(appType)
 
-        wr := []reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r)}
+        wr := []reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r), reflect.ValueOf(m), reflect.ValueOf(action)}
         init := app.MethodByName("Init")
         init.Call(wr)
 

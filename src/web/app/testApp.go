@@ -13,20 +13,23 @@ var (
 )
 
 func (app *TestApp) IndexAction() {
-    app.Assign("ip", app.Ip2Long())
+    app.Data["ip"] = app.Ip2Long()
     app.Display("content", tplPath+"header.html", tplPath+"footer.html", tplPath+"content.html")
 }
 
 
-
-
-
 type Ret struct {
     Status   bool   `json:"status"`
-    Data     string `json:"data"`
+    Data     interface{} `json:"data"`
+}
+
+type DataM struct {
+    Ip string
+    What string
 }
 
 func (app *TestApp) GoAction() {
-    ret := &Ret{false, app.Ip()}
+    what := app.Get("what")
+    ret := &Ret{false, &DataM{app.Ip(), what}}
     app.Json(ret)
 }
