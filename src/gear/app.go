@@ -29,6 +29,10 @@ func (app *App) Init(w http.ResponseWriter, r *http.Request, module string, acti
     app.Action = action
 }
 
+func (app *App) Before() int {
+    return 123
+}
+
 func (app *App) Display(name string, tpl ...string) error {
     t,_ := template.ParseFiles(tpl...)
     t.ExecuteTemplate(app.W, name, app.Data)

@@ -8,11 +8,9 @@ type TestApp struct {
     gear.App
 }
 
-var (
-    tplPath = "src/web/view/"
-)
 
 func (app *TestApp) IndexAction() {
+    tplPath := "src/web/view/"
     app.Data["ip"] = app.Ip2Long()
     app.Display("content", tplPath+"header.html", tplPath+"footer.html", tplPath+"content.html")
 }

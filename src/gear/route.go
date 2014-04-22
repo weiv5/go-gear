@@ -31,12 +31,13 @@ func AddRoute(path string, app AppInterface) {
 }
 
 type Serve struct {}
-
 func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     path := strings.Split(strings.ToLower(strings.Trim(r.URL.Path, "/")), "/")
     var m, action string
     l := len(path)
-    if l==1 {
+    if l==0 {
+        m, action = "", "index"
+    } else if l==1 {
         m, action = path[0], "index"
     } else if l==2 {
         m, action = path[0], path[1]
@@ -52,4 +53,5 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         method.Call(nil)
         return
     }
+    Err.NotFound(w)
 }
