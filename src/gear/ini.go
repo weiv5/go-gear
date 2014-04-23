@@ -231,6 +231,7 @@ func init() {
     flag.Parse()
     Ini,err = IniParse.Parse(*IniFile)
     if err != nil {
-        Err.Fatal(err)
+        Log.WriteLog(err)
+        os.Exit(1)
     }
 }

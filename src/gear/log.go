@@ -4,6 +4,10 @@ import (
     "os"
     "strconv"
     "syscall"
+    "runtime"
+    "path/filepath"
+    "strings"
+    "fmt"
 )
 
 type LogM struct {}
@@ -36,6 +40,21 @@ func (l *LogM) WatchPanic() {
         fd := panicFile.Fd()
         syscall.Dup2(int(fd), int(os.Stderr.Fd()))
     }
+}
+
+func (l *LogM) WriteLog(err error) {
+    _, file, line, _ := runtime.Caller(1)
+    file = filepath.Base(file)
+    errMsg := err.Error()
+    if !strings.HasPrefix(errMsg, "DEBUG") && !strings.HasPrefix(errMsg, "INFO") {
+        errMsg = "ERROR " + errMsg
+    }
+    msg := fmt.Sprintf("%s [%s:%d]: %s\n", Date(), file, line, errMsg)
+    logFile, err := os.OpenFile("log/log", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+    if err != nil {
+        return
+    }
+    logFile.WriteString(msg)
 }
 
 var (

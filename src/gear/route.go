@@ -4,6 +4,7 @@ import (
     "reflect"
     "strings"
     "net/http"
+    "fmt"
 )
 
 var (
@@ -53,5 +54,12 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         method.Call(nil)
         return
     }
-    Err.NotFound(w)
+    serve.NotFound(w)
+}
+
+func (serve *Serve) NotFound(w http.ResponseWriter) {
+    w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+    w.WriteHeader(404)
+    fmt.Fprintln(w, "404 page not found")
+    return
 }
