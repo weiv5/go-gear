@@ -15,7 +15,6 @@ func AddRoute(path string, app AppInterface) {
     v := reflect.ValueOf(app)
     p := reflect.TypeOf(app)
     t := reflect.Indirect(v).Type()
-
     m := strings.Trim(path, "/")
 
     if _, ok := RouterMaps[m]; !ok {
@@ -46,9 +45,19 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if appType, ok := RouterMaps[m][action]; ok {
         app := reflect.New(appType)
 
-        wr := []reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r), reflect.ValueOf(m), reflect.ValueOf(action)}
         init := app.MethodByName("Init")
-        init.Call(wr)
+        init.Call([]reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r), reflect.ValueOf(m), reflect.ValueOf(action)})
+
+        checkType := reflect.TypeOf((*CheckInterface)(nil)).Elem()
+        if app.Type().Implements(checkType) {
+            check := app.MethodByName("Check")
+            checkRes := check.Call(nil)
+            if checkRes[0].Bool() == false {
+                failed := app.MethodByName("Failed")
+                failed.Call(nil)
+                return
+            }
+        }
 
         method := app.MethodByName(strings.Title(action)+"Action")
         method.Call(nil)
