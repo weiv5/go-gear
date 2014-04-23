@@ -9,6 +9,8 @@ import (
 
 type Request struct {
     R *http.Request
+    Module string
+    Action string
 }
 
 func (r *Request) GetInt(name string) (int, error) {

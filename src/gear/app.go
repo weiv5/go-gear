@@ -10,8 +10,6 @@ type AppInterface interface {
 }
 
 type App struct {
-    Module string
-    Action string
     Request
     Response
 }

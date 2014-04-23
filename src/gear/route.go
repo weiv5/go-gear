@@ -50,7 +50,7 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
         checkType := reflect.TypeOf((*CheckInterface)(nil)).Elem()
         if app.Type().Implements(checkType) {
-            request := &Request{r}
+            request := &Request{R:r, Module:m, Action:action}
             check := app.MethodByName("Check")
             checkRes := check.Call([]reflect.Value{reflect.ValueOf(request)})
             if checkRes[0].Bool() == false {
