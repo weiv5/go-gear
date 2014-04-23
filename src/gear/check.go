@@ -1,6 +1,6 @@
 package gear
 
 type CheckInterface interface {
-    Check() bool
+    Check(r *Request) bool
     Failed()
 }
