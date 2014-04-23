@@ -10,6 +10,7 @@ import (
 )
 
 type AppInterface interface {
+    Init(http.ResponseWriter, *http.Request, string, string)
     IndexAction()
 }
 

@@ -1,3 +1,44 @@
-install :   ./install
-start   :   ./bin/web -conf=etc/conf.ini
-request :   localhost:8080/test   localhost:8080/test/go
+安装
+    ./install
+
+启动
+    ./bin/web -conf=etc/conf.ini
+
+访问
+    localhost:8080/test
+
+使用 (参考 src/web 代码)
+1、路由
+    a) 见main.go，gear.AddRoute("/test", &testApp{})
+    b) 路由有两级，/module/action
+    c) 由testApp接管/test的路由，module为test，自动检测testApp内XxxAction命名的函数注册为action，例如：/test/go 会自动路由到testApp.GoAction
+    d) testApp必须定义IndexAction，作为没有action时默认执行方法，/test == /test/index
+
+2、App
+    a) 业务 app 需继承自gear.App
+    b) Display 呈现html页面，参考testApp.IndexAction
+    c) Json 为接口准备，参考testApp.GoAction
+    d) GetXxx，PostXxx，获取用户提交的get/post参数
+    e) Ip，Ip2Long，获取客户端ip
+    f) 待续...
+
+3、CheckInterface
+    a) 需求：在App业务执行之前做公共验证，ip/auth/login等等
+    b) 实现此接口需要定义Check，Failed 两函数，接口格式见src/gear/check.go
+    c) app实现了CheckInterface后，框架在执行action之前会调用Check，返回false验证失败，执行Failed，返回true验证成功，执行相应路由action
+    d) 针对类似ip黑名单/登录检测等，可实现一个公共Verify（参考testApp），对需要做检测的app则继承Verify
+    e) 针对单个app 特殊验证，直接在app内实现以上两方法即可
+
+4、conf.ini
+    a) 内容示例
+        ###########################
+        addr=":8080"        # 服务监听地址
+        r_timeout=10        # 读超时
+        w_timeout=10        # 写超时
+
+        [section]           #配置section
+        key=val             #配置内容
+        key2=val2
+        ###########################
+    b) gear.Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]
+    c) 定义方式见 src/gear/ini.go
