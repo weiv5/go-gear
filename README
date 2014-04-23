@@ -42,8 +42,9 @@
         key=val             #配置内容
         key2=val2
         ###########################
-    b) gear.Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]
-    c) 定义方式见 src/gear/ini.go
+    b) gear.Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获取etc/conf.ini中的配置信息
+    c) gear.IniParse.Parse(file)    解析配置文件
+
 
 8、gear/log.go
     a) 记录进程pid
@@ -59,3 +60,8 @@
 
 11、gear/route.go
     a) 路由
+
+
+TODO:
+session
+js/css static router
