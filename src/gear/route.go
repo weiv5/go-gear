@@ -5,11 +5,28 @@ import (
     "strings"
     "net/http"
     "fmt"
+    "os"
 )
 
 var (
+    StaticMaps  = make(map[string]string)
     RouterMaps  = make(map[string]map[string]reflect.Type)
 )
+
+func StaticRoute() {
+    js := Ini.String("static::js")
+    if js!="" {
+        StaticMaps["js"] = strings.TrimSuffix(js, "/")
+    }
+    css := Ini.String("static::css")
+    if css!="" {
+        StaticMaps["css"] = strings.TrimSuffix(css, "/")
+    }
+    image := Ini.String("static::image")
+    if image!="" {
+        StaticMaps["image"] = strings.TrimSuffix(image, "/")
+    }
+}
 
 func AddRoute(path string, app AppInterface) {
     v := reflect.ValueOf(app)
@@ -35,6 +52,18 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     path := strings.Split(strings.ToLower(strings.Trim(r.URL.Path, "/")), "/")
     var m, action string
     l := len(path)
+    if l>0 {
+        if static, ok := StaticMaps[path[0]]; ok {
+            file := static + strings.TrimPrefix(strings.Trim(r.URL.Path, "/"), path[0])
+            finfo, err := os.Stat(file)
+            if err != nil || finfo.IsDir() {
+                http.NotFound(w, r)
+            } else {
+                http.ServeFile(w, r, file)
+            }
+            return
+        }
+    }
     if l==0 {
         m, action = "", "index"
     } else if l==1 {
@@ -64,12 +93,5 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         method.Call(nil)
         return
     }
-    serve.NotFound(w)
-}
-
-func (serve *Serve) NotFound(w http.ResponseWriter) {
-    w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-    w.WriteHeader(404)
-    fmt.Fprintln(w, "404 page not found")
-    return
+    http.NotFound(w, r)
 }
