@@ -6,7 +6,7 @@ import (
 
 type TestApp struct {
     gear.App
-    Verify
+    CheckIp
 }
 
 

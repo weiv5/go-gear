@@ -5,15 +5,15 @@ import (
     "gear"
 )
 
-type Verify struct {}
+type CheckIp struct {}
 
-func (c *Verify) Check(r *gear.Request) bool {
+func (c *CheckIp) Check(r *gear.Request) bool {
     if (r.Ip() == "127.0.0.1") {
         return false
     }
     return true
 }
 
-func (c *Verify) Failed() {
+func (c *CheckIp) Failed() {
     fmt.Println("failed")
 }
