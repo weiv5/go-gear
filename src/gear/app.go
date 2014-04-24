@@ -5,7 +5,7 @@ import (
 )
 
 type AppInterface interface {
-    Init(http.ResponseWriter, *http.Request, string, string)
+    Init(http.ResponseWriter, *Request)
     IndexAction()
 }
 
@@ -14,10 +14,10 @@ type App struct {
     Response
 }
 
-func (app *App) Init(w http.ResponseWriter, r *http.Request, module string, action string) {
+func (app *App) Init(w http.ResponseWriter, r *Request) {
     app.W = w
-    app.R = r
+    app.R = r.R
+    app.Module = r.Module
+    app.Action = r.Action
     app.Data = make(map[string] interface{})
-    app.Module = module
-    app.Action = action
 }

@@ -2,32 +2,16 @@ package gear
 
 import (
     "os"
-    "strconv"
     "syscall"
     "runtime"
     "path/filepath"
     "strings"
     "fmt"
+    "time"
 )
 
-type LogM struct {}
-
-func (l *LogM) WritePid() (err error) {
-    pid := strconv.Itoa(os.Getpid())
-    if pid == "" {
-        return
-    }
-    filename := "log/gear.pid"
-    file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-    if err != nil {
-        return
-    }
-    defer func() {
-        file.Close()
-    }()
-    file.WriteString(pid)
-
-    return
+type LogM struct {
+    accessChan chan string
 }
 
 func (l *LogM) WatchPanic() {
@@ -40,6 +24,7 @@ func (l *LogM) WatchPanic() {
         fd := panicFile.Fd()
         syscall.Dup2(int(fd), int(os.Stderr.Fd()))
     }
+    defer panicFile.Close()
 }
 
 func (l *LogM) WriteLog(err error) {
@@ -50,18 +35,38 @@ func (l *LogM) WriteLog(err error) {
         errMsg = "ERROR " + errMsg
     }
     msg := fmt.Sprintf("%s [%s:%d]: %s\n", Date(), file, line, errMsg)
-    logFile, err := os.OpenFile("log/log", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+    logFile, err := os.OpenFile("log/log", os.O_CREATE|os.O_WRONLY, 0644)
+    defer logFile.Close()
     if err != nil {
         return
     }
     logFile.WriteString(msg)
 }
 
-var (
-    Log = &LogM{}
-)
-
-func init() {
-    Log.WritePid()
-    Log.WatchPanic()
+func (l *LogM) WatchAccess() {
+    now := time.Now()
+    y, m, d := now.Year(), now.Month(), now.Day()
+    logFile, err := os.OpenFile("log/access."+fmt.Sprintf("%d%02d%02d", y, m, d), os.O_CREATE|os.O_WRONLY, 0644)
+    defer logFile.Close()
+    if err != nil {
+        return
+    }
+    for msg := range l.accessChan {
+        now2 := time.Now()
+        y2, m2, d2 := now2.Year(), now2.Month(), now2.Day()
+        if y!=y2 || m!=m2 || d!=d2 {
+            y, m, d = y2, m2, d2
+            logFile,_ = os.OpenFile("log/access."+fmt.Sprintf("%d%02d%02d", y, m, d), os.O_CREATE|os.O_WRONLY, 0644)
+        }
+        logFile.WriteString(msg)
+    }
 }
+
+func (l *LogM) Access(r *Request) {
+    msg := fmt.Sprintf("%s\t\"%s\"\t\"%s\"\t\"%s\"\n", Date(), r.Ip(), r.Url(), r.Header("User-Agent"))
+    l.accessChan <- msg
+}
+
+var (
+    Log = &LogM{accessChan:make(chan string, 1024)}
+)

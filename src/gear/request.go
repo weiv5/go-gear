@@ -77,5 +77,13 @@ func (r *Request) Ip2Long(ip ...string) int64 {
 
     ip_bin := fmt.Sprintf("%08b%08b%08b%08b", ip_1, ip_2, ip_3, ip_4)
     ip_int,_ := strconv.ParseInt(ip_bin, 2, 64)
-    return ip_int;
+    return ip_int
+}
+
+func (r *Request) Header(key string) string {
+    return r.R.Header.Get(key)
+}
+
+func (r *Request) Url() string {
+    return r.R.URL.String()
 }

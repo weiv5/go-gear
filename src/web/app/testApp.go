@@ -12,7 +12,7 @@ type TestApp struct {
 
 func (app *TestApp) IndexAction() {
     tplPath := "src/web/view/"
-    app.Data["ip"] = app.Ip2Long()
+    app.Data["ip"] = app.Ip()+app.Header("User-Agent")
     app.Display("content", tplPath+"header.html", tplPath+"footer.html", tplPath+"content.html")
 }
 

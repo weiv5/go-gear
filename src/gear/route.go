@@ -53,6 +53,9 @@ func AddRoute(path string, app AppInterface) {
 
 type Serve struct {}
 func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    request := &Request{R:r}
+    Log.Access(request)
+
     path := strings.Split(strings.ToLower(strings.Trim(r.URL.Path, "/")), "/")
     var m, action string
     l := len(path)
@@ -78,14 +81,12 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         m, action = path[0], path[1]
     }
     if appType, ok := RouterMaps[m][action]; ok {
+        request.Module = m
+        request.Action = action
         app := reflect.New(appType)
-
-        init := app.MethodByName("Init")
-        init.Call([]reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r), reflect.ValueOf(m), reflect.ValueOf(action)})
 
         checkType := reflect.TypeOf((*CheckInterface)(nil)).Elem()
         if app.Type().Implements(checkType) {
-            request := &Request{R:r, Module:m, Action:action}
             check := app.MethodByName("Check")
             checkRes := check.Call([]reflect.Value{reflect.ValueOf(request)})
             if checkRes[0].Bool() == false {
@@ -94,6 +95,9 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
                 return
             }
         }
+
+        init := app.MethodByName("Init")
+        init.Call([]reflect.Value{reflect.ValueOf(w), reflect.ValueOf(request)})
 
         method := app.MethodByName(strings.Title(action)+"Action")
         method.Call(nil)

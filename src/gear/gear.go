@@ -6,6 +6,9 @@ import (
 )
 
 func Run() {
+    Log.WatchPanic()
+    go Log.WatchAccess()
+
     r_timeout,_ := Ini.Int("r_timeout")
     w_timeout,_ := Ini.Int("w_timeout")
     s := &http.Server{
