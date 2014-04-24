@@ -4,8 +4,8 @@ import (
     "reflect"
     "strings"
     "net/http"
-    "fmt"
     "os"
+    "fmt"
 )
 
 var (
@@ -14,18 +14,24 @@ var (
 )
 
 func StaticRoute() {
+    dir := strings.TrimSuffix(Ini.String("static::dir"), "/")+"/"
     js := Ini.String("static::js")
     if js!="" {
-        StaticMaps["js"] = strings.TrimSuffix(js, "/")
+        StaticMaps["js"] = dir+strings.Trim(js, "/")
     }
     css := Ini.String("static::css")
     if css!="" {
-        StaticMaps["css"] = strings.TrimSuffix(css, "/")
+        StaticMaps["css"] = dir+strings.Trim(css, "/")
     }
     image := Ini.String("static::image")
     if image!="" {
-        StaticMaps["image"] = strings.TrimSuffix(image, "/")
+        StaticMaps["image"] = dir+strings.Trim(image, "/")
     }
+    favicon := Ini.String("static::favicon.ico")
+    if favicon!="" {
+        StaticMaps["favicon.ico"] = dir+strings.Trim(favicon, "/")
+    }
+    fmt.Println(StaticMaps)
 }
 
 func AddRoute(path string, app AppInterface) {
@@ -52,9 +58,11 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     path := strings.Split(strings.ToLower(strings.Trim(r.URL.Path, "/")), "/")
     var m, action string
     l := len(path)
+    //static file
     if l>0 {
         if static, ok := StaticMaps[path[0]]; ok {
             file := static + strings.TrimPrefix(strings.Trim(r.URL.Path, "/"), path[0])
+            fmt.Println(file)
             finfo, err := os.Stat(file)
             if err != nil || finfo.IsDir() {
                 http.NotFound(w, r)
@@ -64,6 +72,7 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
             return
         }
     }
+    //auto route
     if l==0 {
         m, action = "", "index"
     } else if l==1 {
