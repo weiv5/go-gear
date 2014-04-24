@@ -33,22 +33,28 @@
 
 6、gear/ini.go 和 conf.ini
     a) 内容示例
-        ###########################
-        addr=":8080"        # 服务监听地址
-        r_timeout=10        # 读超时
-        w_timeout=10        # 写超时
+        ###########################################################
+        addr=":8080"                # 服务监听地址
+        r_timeout=10                # 读超时
+        w_timeout=10                # 写超时
 
-        [section]           #配置section
-        key=val             #配置内容
-        key2=val2
-        ###########################
+        [static]                    # 静态文件section
+        dir="/xxx/src/web/"         # 静态文件路径
+        js="path/"                  # html 调用 /js/jquery.min.js  = dir + "path/jquery.min.js"
+        css="css/"                  # 同上
+        image="image/"              # 同上
+        favicon.ico="favicon.ico"   # 同上
+        
+        #example
+        [section]                   #配置section
+        key=val                     #配置内容
+        ###########################################################
     b) gear.Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获取etc/conf.ini中的配置信息
     c) gear.IniParse.Parse(file)    解析配置文件
 
 
 8、gear/log.go
-    a) 记录进程pid
-    b) 记录错误日志
+    a) 记录错误日志
 
 9、gear/request.go
     a) 封装 *http.Request
@@ -56,7 +62,7 @@
 
 10、gear/response.go
     a) 封装 http.ResponseWriter
-    b) 实现 Display/Json 方法
+    b) 实现 Display/Json/Redirect 等基于http.ResponseWriter方法
 
 11、gear/route.go
     a) 路由
@@ -64,4 +70,3 @@
 
 TODO:
 session
-js/css static router
