@@ -5,7 +5,6 @@ import (
     "strings"
     "net/http"
     "os"
-    "fmt"
 )
 
 var (
@@ -31,7 +30,6 @@ func StaticRoute() {
     if favicon!="" {
         StaticMaps["favicon.ico"] = dir+strings.Trim(favicon, "/")
     }
-    fmt.Println(StaticMaps)
 }
 
 func AddRoute(path string, app AppInterface) {
@@ -62,7 +60,6 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if l>0 {
         if static, ok := StaticMaps[path[0]]; ok {
             file := static + strings.TrimPrefix(strings.Trim(r.URL.Path, "/"), path[0])
-            fmt.Println(file)
             finfo, err := os.Stat(file)
             if err != nil || finfo.IsDir() {
                 http.NotFound(w, r)
