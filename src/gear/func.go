@@ -2,19 +2,24 @@ package gear
 
 import (
     "time"
-    "strings"
 )
 
 func Date(f ...string) string {
     var format string
     if len(f)==1 {
-        format = strings.ToLower(f[0])
-        format = strings.Replace(format, "y", "2006", 1)
-        format = strings.Replace(format, "m", "01", 1)
-        format = strings.Replace(format, "d", "02", 1)
-        format = strings.Replace(format, "h", "15", 1)
-        format = strings.Replace(format, "i", "04", 1)
-        format = strings.Replace(format, "s", "05", 1)
+        for _, v := range f[0] {
+            switch (v) {
+                case 'Y' :
+                case 'y' : format += "2006"
+                case 'm' : format += "01"
+                case 'd' : format += "02"
+                case 'H' :
+                case 'h' : format += "15"
+                case 'i' : format += "04"
+                case 's' : format += "05"
+                default : format += string(v)
+            }
+        }
     } else {
         format = "2006-01-02 15:04:05"
     }
