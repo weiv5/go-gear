@@ -46,17 +46,23 @@ func (l *LogM) WriteLog(err error) {
 func (l *LogM) WatchAccess() {
     now := time.Now()
     y, m, d := now.Year(), now.Month(), now.Day()
-    logFile, err := os.OpenFile("log/access."+fmt.Sprintf("%d%02d%02d", y, m, d), os.O_CREATE|os.O_WRONLY, 0644)
+    logFile, err := os.OpenFile("log/access."+fmt.Sprintf("%d%02d%02d", y, m, d), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
     defer logFile.Close()
     if err != nil {
+        fmt.Println(err)
         return
     }
     for msg := range l.accessChan {
+        fmt.Println(msg)
         now2 := time.Now()
         y2, m2, d2 := now2.Year(), now2.Month(), now2.Day()
         if y!=y2 || m!=m2 || d!=d2 {
             y, m, d = y2, m2, d2
-            logFile,_ = os.OpenFile("log/access."+fmt.Sprintf("%d%02d%02d", y, m, d), os.O_CREATE|os.O_WRONLY, 0644)
+            logFile,err = os.OpenFile("log/access."+fmt.Sprintf("%d%02d%02d", y, m, d), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+            if err != nil {
+                fmt.Println(err)
+                return
+            }
         }
         logFile.WriteString(msg)
     }
