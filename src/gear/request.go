@@ -46,7 +46,7 @@ func (r *Request) Post(name string) string {
 }
 
 func (r *Request) Ip() string {
-    ips := r.R.Header.Get("X-Forwarded-For")
+    ips := r.GetHeader("X-Forwarded-For")
     if ips != "" {
         ip := strings.Split(ips, ",")
         if len(ip) > 0 && ip[0] != "" {
@@ -80,7 +80,7 @@ func (r *Request) Ip2Long(ip ...string) int64 {
     return ip_int
 }
 
-func (r *Request) Header(key string) string {
+func (r *Request) GetHeader(key string) string {
     return r.R.Header.Get(key)
 }
 

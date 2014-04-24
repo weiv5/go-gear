@@ -54,6 +54,7 @@ func AddRoute(path string, app AppInterface) {
 type Serve struct {}
 func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     request := &Request{R:r}
+    response:= &Response{W:w}
     Log.Access(request)
 
     path := strings.Split(strings.ToLower(strings.Trim(r.URL.Path, "/")), "/")
@@ -91,13 +92,13 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
             checkRes := check.Call([]reflect.Value{reflect.ValueOf(request)})
             if checkRes[0].Bool() == false {
                 failed := app.MethodByName("Failed")
-                failed.Call(nil)
+                failed.Call([]reflect.Value{reflect.ValueOf(response)})
                 return
             }
         }
 
         init := app.MethodByName("Init")
-        init.Call([]reflect.Value{reflect.ValueOf(w), reflect.ValueOf(request)})
+        init.Call([]reflect.Value{reflect.ValueOf(response), reflect.ValueOf(request)})
 
         method := app.MethodByName(strings.Title(action)+"Action")
         method.Call(nil)

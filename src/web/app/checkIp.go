@@ -1,7 +1,6 @@
 package app
 
 import (
-    "fmt"
     "gear"
 )
 
@@ -14,6 +13,6 @@ func (c *CheckIp) Check(r *gear.Request) bool {
     return true
 }
 
-func (c *CheckIp) Failed() {
-    fmt.Println("failed")
+func (c *CheckIp) Failed(w *gear.Response) {
+    w.Redirect("/")
 }

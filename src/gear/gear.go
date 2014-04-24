@@ -3,9 +3,11 @@ package gear
 import (
     "net/http"
     "time"
+    "runtime"
 )
 
 func Run() {
+    runtime.GOMAXPROCS(runtime.NumCPU())
     Log.WatchPanic()
     go Log.WatchAccess()
 

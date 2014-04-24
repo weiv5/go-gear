@@ -12,17 +12,26 @@ type Response struct {
     W http.ResponseWriter
 }
 
-func (r *Response) Display(name string, tpl ...string) error {
+func (w *Response) SetHeader(key string, val string) {
+    w.W.Header().Set(key, val);
+}
+
+func (w *Response) Display(name string, tpl ...string) error {
     t,_ := template.ParseFiles(tpl...)
-    t.ExecuteTemplate(r.W, name, r.Data)
-    t.Execute(r.W, nil)
+    t.ExecuteTemplate(w.W, name, w.Data)
+    t.Execute(w.W, nil)
     return nil
 }
 
-func (r *Response) Json(data interface{}) error {
+func (w *Response) Json(data interface{}) error {
     content,_ := json.Marshal(data)
-    r.W.Header().Set("Content-Type", "application/json;charset=UTF-8")
-    r.W.Header().Set("Content-Length", strconv.Itoa(len(content)))
-    r.W.Write(content)
+    w.SetHeader("Content-Type", "application/json;charset=UTF-8")
+    w.SetHeader("Content-Length", strconv.Itoa(len(content)))
+    w.W.Write(content)
     return nil
+}
+
+func (w *Response) Redirect(url string) {
+    w.SetHeader("Location", url)
+    w.W.WriteHeader(307)
 }

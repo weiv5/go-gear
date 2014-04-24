@@ -1,11 +1,7 @@
 package gear
 
-import (
-    "net/http"
-)
-
 type AppInterface interface {
-    Init(http.ResponseWriter, *Request)
+    Init(*Response, *Request)
     IndexAction()
 }
 
@@ -14,8 +10,8 @@ type App struct {
     Response
 }
 
-func (app *App) Init(w http.ResponseWriter, r *Request) {
-    app.W = w
+func (app *App) Init(w *Response, r *Request) {
+    app.W = w.W
     app.R = r.R
     app.Module = r.Module
     app.Action = r.Action
