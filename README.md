@@ -81,7 +81,6 @@ key=val                        #配置内容
 ```
 a) gear.IniParse.Parse(file) Ini    解析配置文件
 b) Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获取etc/conf.ini中的配置信息
-
 ```
 
 10、gear/log.go
