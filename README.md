@@ -93,5 +93,6 @@ b) 记录访问日志
 ```
 session
 cookie
+templatefunc
 ...
 ```
