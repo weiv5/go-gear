@@ -1,17 +1,17 @@
 ## 安装
 ```
-    ./install
+./install
 ```
 
 ## 启动
 ```
-    ./bin/web -conf=etc/conf.ini
+./bin/web -conf=etc/conf.ini
 ```
 
 ## 访问
 ```
-    localhost:8080/
-    localhost:8080/info
+localhost:8080/
+localhost:8080/info
 ```
 
 ## 说明
