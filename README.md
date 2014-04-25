@@ -61,16 +61,25 @@ a) 框架入口文件，用来启动服务
 
 8、conf.ini
 >addr=":8080"                   # 服务监听地址
+
 >r_timeout=10                   # 读超时
+
 >w_timeout=10                   # 写超时
+
 >[static]                       # 静态文件section
+
 >dir="/xxx/src/web/"            # 静态文件路径
+
 >js="path/"                     # html 调用 /js/jquery.min.js  = dir + "path/jquery.min.js"
+
 >css="css/"                     # 同上
+
 >image="image/"                 # 同上
+
 >favicon.ico="favicon.ico"      # 同上
 
 >[section]                      #配置section
+
 >key=val                        #配置内容
 
 8、gear/ini.go 和 conf.ini
