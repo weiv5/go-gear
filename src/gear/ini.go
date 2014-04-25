@@ -124,27 +124,43 @@ type IniConfigContainer struct {
 }
 
 // Bool returns the boolean value for a given key.
-func (c *IniConfigContainer) Bool(key string) (bool, error) {
+func (c *IniConfigContainer) Bool(key string) bool {
     key = strings.ToLower(key)
-    return strconv.ParseBool(c.getdata(key))
+    b, err := strconv.ParseBool(c.getdata(key))
+    if err != nil {
+        return false
+    }
+    return b
 }
 
 // Int returns the integer value for a given key.
-func (c *IniConfigContainer) Int(key string) (int, error) {
+func (c *IniConfigContainer) Int(key string) int {
     key = strings.ToLower(key)
-    return strconv.Atoi(c.getdata(key))
+    i, err := strconv.Atoi(c.getdata(key))
+    if err != nil {
+        return 0
+    }
+    return i
 }
 
 // Int64 returns the int64 value for a given key.
-func (c *IniConfigContainer) Int64(key string) (int64, error) {
+func (c *IniConfigContainer) Int64(key string) int64 {
     key = strings.ToLower(key)
-    return strconv.ParseInt(c.getdata(key), 10, 64)
+    i, err := strconv.ParseInt(c.getdata(key), 10, 64)
+    if err != nil {
+        return 0
+    }
+    return i
 }
 
 // Float returns the float value for a given key.
-func (c *IniConfigContainer) Float(key string) (float64, error) {
+func (c *IniConfigContainer) Float(key string) float64 {
     key = strings.ToLower(key)
-    return strconv.ParseFloat(c.getdata(key), 64)
+    f,err := strconv.ParseFloat(c.getdata(key), 64)
+    if err != nil {
+        return 0
+    }
+    return f
 }
 
 // String returns the string value for a given key.
@@ -158,41 +174,6 @@ func (c *IniConfigContainer) Strings(key string) []string {
     return strings.Split(c.String(key), ";")
 }
 
-// WriteValue writes a new value for key.
-// if write to one section, the key need be "section::key".
-// if the section is not existed, it panics.
-func (c *IniConfigContainer) Set(key, value string) error {
-    c.Lock()
-    defer c.Unlock()
-    if len(key) == 0 {
-        return errors.New("key is empty")
-    }
-
-    var section, k string
-    key = strings.ToLower(key)
-    sectionkey := strings.Split(key, "::")
-    if len(sectionkey) >= 2 {
-        section = sectionkey[0]
-        k = sectionkey[1]
-    } else {
-        section = DEFAULT_SECTION
-        k = sectionkey[0]
-    }
-    if _, ok := c.data[section]; !ok {
-        c.data[section] = make(map[string]string)
-    }
-    c.data[section][k] = value
-    return nil
-}
-
-// DIY returns the raw value by a given key.
-func (c *IniConfigContainer) DIY(key string) (v interface{}, err error) {
-	key = strings.ToLower(key)
-	if v, ok := c.data[key]; ok {
-		return v, nil
-	}
-	return v, errors.New("key not find")
-}
 
 // section.key or key
 func (c *IniConfigContainer) getdata(key string) string {

@@ -35,7 +35,7 @@ func (l *LogM) WriteLog(err error) {
         errMsg = "ERROR " + errMsg
     }
     msg := fmt.Sprintf("%s [%s:%d]: %s\n", Date(), file, line, errMsg)
-    logFile, err := os.OpenFile("log/log", os.O_CREATE|os.O_WRONLY, 0644)
+    logFile, err := os.OpenFile("log/log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
     defer logFile.Close()
     if err != nil {
         return
