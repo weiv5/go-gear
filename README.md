@@ -59,10 +59,7 @@ a) 公共无其他依赖的基础方法
 a) 框架入口文件，用来启动服务
 ```
 
-8、gear/ini.go 和 conf.ini
-```
-a) 内容示例
-    
+8、conf.ini
 >addr=":8080"                # 服务监听地址
 >r_timeout=10                # 读超时
 >w_timeout=10                # 写超时
@@ -76,8 +73,12 @@ a) 内容示例
 >#example
 >[section]                   #配置section
 >key=val                     #配置内容
-b) gear.Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获取etc/conf.ini中的配置信息
-c) gear.IniParse.Parse(file)    解析配置文件
+
+8、gear/ini.go 和 conf.ini
+```
+a) gear.IniParse.Parse(file) Ini    解析配置文件
+b) Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获取etc/conf.ini中的配置信息
+
 ```
 
 9、gear/log.go
