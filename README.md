@@ -60,7 +60,8 @@ a) 框架入口文件，用来启动服务
 ```
 
 8、conf.ini
->addr=":8080"                # 服务监听地址 
+>addr=":8080"                # 服务监听地址
+
 >r_timeout=10                # 读超时 
 >w_timeout=10                # 写超时 
 >[static]                    # 静态文件section 
