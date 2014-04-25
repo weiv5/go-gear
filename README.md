@@ -77,7 +77,7 @@ favicon.ico="favicon.ico"      # 同上
 key=val                        #配置内容
 ```
 
-9、gear/ini.go 和 conf.ini
+9、gear/ini.go
 ```
 a) gear.IniParse.Parse(file) Ini    解析配置文件
 b) Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获取etc/conf.ini中的配置信息
