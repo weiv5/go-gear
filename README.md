@@ -14,7 +14,7 @@
     localhost:8080/info
 ```
 
-## 使用
+## 说明
 1、路由
 ```
 a) 见src/web/main.go，gear.AddRoute("/info", &InfoApp{})
