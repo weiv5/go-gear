@@ -1,19 +1,19 @@
-安装
+## 安装
 ```
     ./install
 ```
 
-启动
+## 启动
 ```
     ./bin/web -conf=etc/conf.ini
 ```
 
-访问
+## 访问
 ```
     localhost:8080/test
 ```
 
-使用
+## 使用
 1、路由
 ```
     a) 见main.go，gear.AddRoute("/test", &testApp{})
