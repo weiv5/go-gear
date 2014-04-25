@@ -1,7 +1,8 @@
-{{define "content"}}
+{{define "detail"}}
 {{template "header"}}
 <script src="/js/jquery.min.js"></script>
-<div>body</div>
-<div>{{.ip}}</div>
+<p>name: {{.name}}</p>
+<p>ip: {{.ip}}</p>
+<p>ua: {{.ua}}</p>
 {{template "footer"}}
 {{end}}

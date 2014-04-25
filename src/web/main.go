@@ -8,6 +8,7 @@ import (
 func main() {
     gear.StaticRoute()
     gear.AddRoute("/", &app.IndexApp{})
-    gear.AddRoute("/test", &app.TestApp{})
+    gear.AddRoute("/login", &app.LoginApp{})
+    gear.AddRoute("/info", &app.InfoApp{})
     gear.Run()
 }

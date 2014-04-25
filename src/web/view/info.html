@@ -1,0 +1,11 @@
+{{define "info"}}
+{{template "header"}}
+<h2>{{.name}}</h2>
+<ul>
+<li><a href="/info/detail?login={{.login}}&name=davi">davi</a></li>
+<li><a href="/info/detail?login={{.login}}&name=test">test</a></li>
+<li><a href="/info/detail?login={{.login}}&name=gear">gear</a></li>
+<li><a href="/info/detail?login={{.login}}&name=look">look</a></li>
+</ul>
+{{template "footer"}}
+{{end}}
