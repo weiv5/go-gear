@@ -18,8 +18,8 @@
 1、路由
 ```
 a) 见src/web/main.go，gear.AddRoute("/info", &InfoApp{})
-b) 路由有两级，/module/action
-c) 由InfoApp接管/info的路由，module为info，自动检测InfoApp内XxxAction函数，例：/info/detail会路由到InfoApp.DetailAction
+b) 路由分两级，/module/action
+c) 由InfoApp接管/info的路由，此时module=info，自动检测InfoApp内XxxAction函数，/info/detail=InfoApp.DetailAction
 d) InfoApp必须定义IndexAction，作为没有action时默认执行方法，/info == /info/index
 ```
 
@@ -43,10 +43,10 @@ b) 实现 Display/Json/Redirect 等基于http.ResponseWriter方法
 
 5、gear/check.go
 ```
-a) 实现在App业务执行之前做公共验证，ip/auth/login等等，定义接口CheckInterface
-b) 实现此接口需要实现Check，Failed 两函数
-c) app实现CheckInterface后，框架在执行action前会调用Check，false失败，执行Failed，true成功，执行相应路由action
-d) 针对类似登录检测等，可实现一个公共CheckLogin，对需要做检测的app则继承CheckLogin
+a) 在业务逻辑之前做各种验证，ip/auth/login等等
+b) 接口CheckInterface，定义Check(*Request) bool，Failed(*Response) 两方法
+c) app实现CheckInterface后，框架在路由之前会调用Check，false验证失败，执行Failed，true成功，继续路由
+d) 针对类似登录检测的公共需求，可实现一个CheckLogin，需要登录的app继承CheckLogin
 e) 针对单个app 特殊验证，直接在app内实现Check，Failed
 ```
 
@@ -90,7 +90,9 @@ a) 记录错误日志
 b) 记录访问日志
 ```
 
-## TODO
+## TODO 封装
 ```
 session
+cookie
+...
 ```
