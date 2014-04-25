@@ -10,7 +10,8 @@
 
 ## 访问
 ```
-    localhost:8080/test
+    localhost:8080/
+    localhost:8080/info
 ```
 
 ## 使用
