@@ -32,6 +32,15 @@ func StaticRoute() {
     }
 }
 
+func AddRoutes(path string, apps ...AppInterface) {
+    if len(apps) == 0 {
+        return
+    }
+    for k,v := range apps {
+        AddRoute(path, v)
+    }
+}
+
 func AddRoute(path string, app AppInterface) {
     v := reflect.ValueOf(app)
     p := reflect.TypeOf(app)

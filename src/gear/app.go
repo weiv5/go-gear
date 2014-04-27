@@ -2,7 +2,6 @@ package gear
 
 type AppInterface interface {
     Init(*Response, *Request)
-    IndexAction()
 }
 
 type App struct {
