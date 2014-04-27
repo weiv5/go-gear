@@ -36,7 +36,7 @@ func AddRoutes(path string, apps ...AppInterface) {
     if len(apps) == 0 {
         return
     }
-    for k,v := range apps {
+    for _,v := range apps {
         AddRoute(path, v)
     }
 }
@@ -84,11 +84,11 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     }
     //auto route
     if l==0 {
-        m, action = "", "index"
+        m, action = "", "Index"
     } else if l==1 {
-        m, action = path[0], "index"
+        m, action = path[0], "Index"
     } else if l==2 {
-        m, action = path[0], path[1]
+        m, action = path[0], strings.Title(path[1])
     }
     if appType, ok := RouterMaps[m][action]; ok {
         request.Module = m
@@ -109,7 +109,7 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         init := app.MethodByName("Init")
         init.Call([]reflect.Value{reflect.ValueOf(response), reflect.ValueOf(request)})
 
-        method := app.MethodByName(strings.Title(action)+"Action")
+        method := app.MethodByName(action+"Action")
         method.Call(nil)
         return
     }
