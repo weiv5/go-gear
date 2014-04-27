@@ -23,31 +23,31 @@ c) 由InfoApp接管/info的路由，此时module=info，自动检测InfoApp内Xx
 d) InfoApp必须定义IndexAction，作为没有action时默认执行方法，/info == /info/index
 ```
 
-2、gear/app.go
+2、验证:gear/check.go
+```
+a) 用于在业务逻辑之前做各种验证，ip/auth/login等等
+b) 定义了接口CheckInterface，接口内有Check(*Request) bool，Failed(*Response) 两方法
+c) app实现CheckInterface后，框架在路由之前会调用Check，false验证失败，执行Failed，true成功，继续路由
+d) 针对类似登录检测的公共需求，可实现一个CheckLogin，需要登录的app继承CheckLogin
+e) 针对单个app 特殊验证，直接在app内实现Check，Failed
+```
+
+3、gear/app.go
 ```
 a) 继承自request，response，实现appInerface
 b) 业务app需继承gear.App，见src/web/app/infoApp.go
 ```
 
-3、gear/request.go
+4、gear/request.go
 ```
 a) 封装 *http.Request
 b) 实现 GetXxx/PostXxx/Ip/Ip2Long 等基于*http.Request的方
 ```
 
-4、gear/response.go
+5、gear/response.go
 ```
 a) 封装 http.ResponseWriter
 b) 实现 Display/Json/Redirect 等基于http.ResponseWriter方法
-```
-
-5、gear/check.go
-```
-a) 在业务逻辑之前做各种验证，ip/auth/login等等
-b) 接口CheckInterface，定义Check(*Request) bool，Failed(*Response) 两方法
-c) app实现CheckInterface后，框架在路由之前会调用Check，false验证失败，执行Failed，true成功，继续路由
-d) 针对类似登录检测的公共需求，可实现一个CheckLogin，需要登录的app继承CheckLogin
-e) 针对单个app 特殊验证，直接在app内实现Check，Failed
 ```
 
 6、gear/func.go
@@ -87,11 +87,4 @@ b) Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获�
 ```
 a) 记录错误日志
 b) 记录访问日志
-```
-
-## TODO 封装
-```
-session
-cookie
-...
 ```
