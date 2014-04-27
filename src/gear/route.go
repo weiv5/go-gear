@@ -52,7 +52,7 @@ func AddRoute(path string, app AppInterface) {
     }
     for i := 0; i < p.NumMethod(); i++ {
         if strings.HasSuffix(p.Method(i).Name, "Action") {
-            action := strings.ToLower(strings.TrimSuffix(p.Method(i).Name, "Action"))
+            action := strings.TrimSuffix(p.Method(i).Name, "Action")
             if _,ok := RouterMaps[m][action]; !ok && action!="" {
                 RouterMaps[m][action] = t
             }
@@ -66,7 +66,7 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     response:= &Response{W:w}
     Log.Access(request)
 
-    path := strings.Split(strings.ToLower(strings.Trim(r.URL.Path, "/")), "/")
+    path := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
     var m, action string
     l := len(path)
     //static file
