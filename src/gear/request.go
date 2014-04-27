@@ -5,9 +5,11 @@ import (
     "strings"
     "strconv"
     "fmt"
+    "gear/session"
 )
 
 type Request struct {
+    Session session.SessionStore
     R *http.Request
     Module string
     Action string

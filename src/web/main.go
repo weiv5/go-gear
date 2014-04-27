@@ -10,5 +10,6 @@ func main() {
     gear.AddRoute("/", &app.IndexApp{})
     gear.AddRoute("/login", &app.LoginApp{})
     gear.AddRoute("/info", &app.InfoApp{})
+    gear.SessionStart()
     gear.Run()
 }

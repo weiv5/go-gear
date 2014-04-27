@@ -4,7 +4,28 @@ import (
     "net/http"
     "time"
     "runtime"
+    "gear/session"
 )
+
+var (
+    SessionOn bool = false
+    SessionM *session.Manager
+)
+
+func SessionStart() {
+    SessionOn = true
+    cookie := Ini.String("session::cookiename")
+    gclifetime := Ini.String("session::gclifetime")
+    provider := Ini.String("session::savepath")
+    conf := `{"cookieName":"`+cookie+`","gclifetime":`+gclifetime+`,"providerConfig":"`+provider+`"}`
+    var err error
+    SessionM, err = session.NewManager("file", conf)
+    if err != nil {
+        Log.WriteLog(err)
+        go SessionM.GC()
+    }
+}
+
 
 func Run() {
     runtime.GOMAXPROCS(runtime.NumCPU())

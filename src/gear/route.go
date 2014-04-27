@@ -5,6 +5,7 @@ import (
     "strings"
     "net/http"
     "os"
+    "gear/session"
 )
 
 var (
@@ -91,9 +92,17 @@ func (serve *Serve) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         m, action = path[0], strings.Title(path[1])
     }
     if appType, ok := RouterMaps[m][action]; ok {
+        app := reflect.New(appType)
         request.Module = m
         request.Action = action
-        app := reflect.New(appType)
+
+        if SessionOn {
+            sess := SessionM.SessionStart(w, r)
+            defer sess.SessionRelease(w)
+            request.Session = sess
+        } else {
+            request.Session = &session.NoSession{}
+        }
 
         checkType := reflect.TypeOf((*CheckInterface)(nil)).Elem()
         if app.Type().Implements(checkType) {

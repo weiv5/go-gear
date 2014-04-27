@@ -10,6 +10,7 @@ type InfoApp struct {
 }
 
 func (app *InfoApp) IndexAction() {
+    app.Session.Set("uid", 1)
     tplPath := "src/web/view/"
     app.Data["login"] = app.Get("login")
     app.Data["name"] = app.Post("name")

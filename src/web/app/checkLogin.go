@@ -7,7 +7,7 @@ import (
 type CheckLogin struct {}
 
 func (c *CheckLogin) Check(r *gear.Request) bool {
-    if (r.Get("login") != "1") {
+    if r.Session.Get("uid") != 1 {
         return false
     }
     return true
