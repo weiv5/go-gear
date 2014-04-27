@@ -88,11 +88,3 @@ b) Ini.[Bool/Int/Int64/Float/String/Strings][("section::key")/("key")]     获�
 a) 记录错误日志
 b) 记录访问日志
 ```
-
-## TODO 封装
-```
-session
-cookie
-templatefunc
-...
-```
