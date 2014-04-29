@@ -26,7 +26,7 @@ type SessionStore interface {
 
 type NoSession struct{}
 func (NoSession) Set(key, value interface{}) error {return nil}
-func (NoSession) Get(key interface{}) interface{} {return ""}
+func (NoSession) Get(key interface{}) interface{} {return nil}
 func (NoSession) Delete(key interface{}) error {return nil}
 func (NoSession) SessionID() string {return ""}
 func (NoSession) SessionRelease(w http.ResponseWriter) {}
