@@ -2,6 +2,9 @@ package gear
 
 import (
     "time"
+    "encoding/hex"
+    "crypto/md5"
+    "crypto/sha1"
 )
 
 func Date(f ...string) string {
@@ -28,4 +31,16 @@ func Date(f ...string) string {
 
 func Time() int64 {
     return time.Now().Unix();
+}
+
+func Md5(in string) string {
+    h := md5.New()
+    h.Write([]byte(in))
+    return hex.EncodeToString(h.Sum(nil))
+}
+
+func Sha1(in string) string {
+    h := sha1.New();
+    h.Write([]byte(in))
+    return hex.EncodeToString(h.Sum(nil))
 }
